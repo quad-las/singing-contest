@@ -2,6 +2,8 @@
 
 namespace App\Domain;
 
+use Illuminate\Support\Facades\Cache;
+
 class Genre
 {
     const GENRES = [
@@ -27,17 +29,29 @@ class Genre
         return $genre_strength;
     }
 
-    public static function resetGenreForNewContest()
+    public static function resetGenresForNewContest()
     {
         $genres = collect(self::GENRES);
 
         // cache $genres
+        Cache::put('genres', $genres);
     }
 
     public static function getGenreForCurrentRound(): string
     {
         // get random genre
+        $genres = Cache::get('genres');
+        $genre = $genres->random();
+
         // remove from collection and update cache
-        // return genre
+        unset($genres[$genre]);
+
+        if (count($genres)) {
+            Cache::put('genres', $genres);
+        } else {
+            Cache::forget('genres');
+        }
+
+        return $genre;
     }
 }

@@ -2,8 +2,8 @@
 
 namespace App\Domain;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
-use App\Domain\Contestant;
 
 class Judge
 {
@@ -13,7 +13,7 @@ class Judge
     const ROCK_JUDGE = 'rock';
     const HONEST_JUDGE = 'honest';
 
-    public static function getJudgesForContest(): collection
+    public static function registerJudgesForContest(): collection
     {
         $judges = collect([
             self::MEAN_JUDGE,
@@ -23,40 +23,17 @@ class Judge
             self::HONEST_JUDGE,
         ])->random(3);
         
-        // cache
+        // cache $judges
+        Cache::put('judges', $judges);
 
         return $judges;
-    }
-
-    public static function scoreTheRound(string $genre)
-    {
-        //  round score range: 0.1 - 10.0
-        $round_score = round((rand(1, 100) / 10), 1);
-
-        // score each consultant
-        $contestants_scores[$genre] = self::scoreEachContestant($genre, $round_score);
-    }
-
-    private static function scoreEachContestant(string $genre, int $round_score)
-    {
-        $isRockGenre = ($genre === 'rock') ? true : false;
-        $scores = [];
-
-        // get contestants from cache
-        $contestants = Contestant::getContestants();
-
-        foreach ($contestants as $contestant) {
-            $rating = $round_score * $contestant['strength'][$genre];
-
-            $scores[] = [
-                $contestant['name'] => self::getTotalScoreFromJudges($rating, $isRockGenre)
-            ];
-        }
     }
 
     private static function getTotalScoreFromJudges(int $rating, bool $isRockGenre): int
     {
         // get contest judges
+        $judges = Cache::get('judges');
+
         $each_score = [];
 
         foreach ($judges as $judge) {
@@ -82,7 +59,6 @@ class Judge
                     break;
                 
                 default:
-                    # code...
                     break;
             }
         }

@@ -2,24 +2,24 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
 use App\Models\Contest;
 use App\Domain\Contestant;
 use App\Domain\Judge;
 use App\Domain\Genre;
+use App\Domain\Score;
 
 class ContestController extends Controller
 {
     public function create()
     {
+        Cache::flush();
+        Genre::resetGenresForNewContest();
         // TODO: contest
 
-
-        // TODO: register consultants 
         $contestants = Contestant::registerContestants();
-
-        // TODO: get judges 
-        $judges = Judge::getJudgesForContest();
+        $judges = Judge::registerJudgesForContest();
 
         return [
             'contestants' => $contestants,
@@ -27,19 +27,22 @@ class ContestController extends Controller
         ];
     }
 
-    public function play(int $round)
+    public function play(int $round): bool
     {
         // get next genre for this round
         $genre = Genre::getGenreForCurrentRound();
+
+        $this->saveRoundScore($genre);
+
+        if ($round === 6) {
+            // close content
+        }
+
+        return true;
     }
 
-    public function saveRoundScore(int $round, string $genre)
+    public function saveRoundScore(string $genre)
     {
-        // cache scores
-
-        // get consultants from cache and get judge scores
-        $contestants = [];
-
-        $scores = Judge::scoreTheRound($genre);
+        $scores = Score::scoreTheRound($genre);
     }
 }

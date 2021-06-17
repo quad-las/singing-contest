@@ -2,6 +2,7 @@
 
 namespace App\Domain;
 
+use Illuminate\Support\Facades\Cache;
 use Faker\Factory as Faker;
 use App\Domain\Genre;
 
@@ -21,14 +22,15 @@ class Contestant
             ];
         }
 
-        // save contestants
+        // cache contestants
+        Cache::put('contestants', $contestants);
 
         return $contestants;
     }
 
     public static function getContestants()
     {
-        // return 
+        return Cache::get('contestants');
     }
 
     private static function getGenreStrength()
@@ -36,4 +38,5 @@ class Contestant
         return Genre::generateGenreStrength();
     }
 
+    // TODO: sick contestant
 }
