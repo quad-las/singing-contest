@@ -12,7 +12,7 @@ use App\Domain\Score;
 
 class ContestController extends Controller
 {
-    public function create()
+    public function start()
     {
         Cache::flush();
         Genre::resetGenresForNewContest();

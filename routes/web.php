@@ -13,6 +13,10 @@
 |
 */
 
-$router->get('/', ['uses' => 'ContestController@create']);
+$router->get('/', function () {
+    return view('index');
+});
+
+$router->get('/start', ['uses' => 'ContestController@create']);
 $router->get('/play/{round}', ['uses' => 'ContestController@play']);
 $router->get('/leader-board', ['uses' => 'ContestController@leaderBoard']);
