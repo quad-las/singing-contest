@@ -29,9 +29,8 @@ class Judge
         return $judges;
     }
 
-    private static function getTotalScoreFromJudges(int $rating, bool $isRockGenre): int
+    public static function getTotalScoreFromJudges(int $rating, bool $isRockGenre, bool $contestant_is_sick): int
     {
-        // get contest judges
         $judges = Cache::get('judges');
 
         $each_score = [];
@@ -47,7 +46,7 @@ class Judge
                     break;
                     
                 case self::FRIENDLY_JUDGE:
-                    $each_score[] = self::scoreByFriendlyJudge($rating);
+                    $each_score[] = self::scoreByFriendlyJudge($rating, $contestant_is_sick);
                     break;
 
                 case self::ROCK_JUDGE:
@@ -76,14 +75,13 @@ class Judge
         return rand(0, 10);
     }
 
-    private static function scoreByFriendlyJudge(int $rating): int
+    private static function scoreByFriendlyJudge(int $rating, bool $contestant_is_sick): int
     {
         $bonus_point = 1;
-        $contestantIsSick = false;
 
         $score = $rating > 3 ? 8 : 7;
 
-        return $contestantIsSick ? ($score + $bonus_point) : $score;
+        return $contestant_is_sick ? ($score + $bonus_point) : $score;
     }
 
     private static function scoreByRockJudge(int $rating, bool $isRockGenre): int

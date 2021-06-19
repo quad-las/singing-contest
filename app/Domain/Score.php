@@ -8,33 +8,64 @@ use App\Domain\Judge;
 
 class Score
 {
-    public static function scoreTheRound(string $genre)
+    public static function computeRoundScore(string $genre)
     {
         // round score range: 0.1 - 10.0
         $round_score = round((rand(1, 100) / 10), 1);
 
-        // score each consultant
-        $contestants_scores[$genre] = self::scoreEachContestant($genre, $round_score);
+        $contestants_scores[$genre] = self::computeAndSaveContestantScore($genre, $round_score);
 
-        // save scores for the round
-        $key = 'round_' . $genre;
-        Cache::put($key, $contestants_scores);
+        return $contestants_scores;
     }
 
-    private static function scoreEachContestant(string $genre, int $round_score): array
+    public static function getWinner(): array
+    {
+        $contestants = Contestant::getContestants()->pluck('name');
+        $overall_contestant_scores = [];
+
+        foreach ($contestants as $contestant) {
+            $overall_contestant_scores[] = [$contestant => Cache::get($contestant)];
+        }
+
+        $highest_score = max($overall_contestant_scores);
+
+        return array_filter(
+            $overall_contestant_scores,
+            fn($score) => $highest_score == $score
+        );
+    }
+
+    private static function computeAndSaveContestantScore(string $genre, int $round_score): array
     {
         $isRockGenre = ($genre === 'rock');
         $scores = [];
 
-        // get contestants
         $contestants = Contestant::getContestants();
 
         foreach ($contestants as $contestant) {
+            $contestant_is_sick = Contestant::isContestantSick();
+
             $rating = $round_score * $contestant['strength'][$genre];
+            
+            if ($contestant_is_sick) {
+                $rating = $rating / 2;
+            }
+
+            $contestant_score = Judge::getTotalScoreFromJudges(
+                $rating,
+                $isRockGenre,
+                $contestant_is_sick    
+            );
+
+            $name = $contestant['name'];
 
             $scores[] = [
-                $contestant['name'] => Judge::getTotalScoreFromJudges($rating, $isRockGenre)
+                $name => $contestant_score,
+                'sick' => $contestant_is_sick,
             ];
+
+            // update contestant's overall score in cache
+            Cache::increment($name, $contestant_score);
         }
 
         return $scores;
