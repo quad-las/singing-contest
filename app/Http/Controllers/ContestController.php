@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Cache;
+use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Repositories\ContestRepository;
 use App\Domain\Contestant;
@@ -12,7 +13,7 @@ use App\Domain\Score;
 
 class ContestController extends Controller
 {
-    public function start()
+    public function start(): View
     {
         Cache::flush();
         Genre::resetGenresForNewContest();
@@ -20,13 +21,13 @@ class ContestController extends Controller
         $contestants = Contestant::registerContestants();
         $judges = Judge::registerJudgesForContest();
 
-        return [
+        return view('index', [
             'contestants' => $contestants,
             'judges' => $judges,
-        ];
+        ]);
     }
 
-    public function play(int $round)
+    public function play(int $round): View
     {
         $genre = Genre::getGenreForCurrentRound();
 
@@ -36,7 +37,7 @@ class ContestController extends Controller
             return $this->closeContest();
         }
 
-        return $scores;
+        return view('index', ['scores' => $scores]);
     }
 
     /**

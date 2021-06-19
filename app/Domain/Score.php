@@ -60,7 +60,8 @@ class Score
             $name = $contestant['name'];
 
             $scores[] = [
-                $name => $contestant_score,
+                'name' => $name,
+                'score' => $contestant_score,
                 'sick' => $contestant_is_sick,
             ];
 
