@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\Request;
-use App\Models\Contest;
+use App\Repositories\ContestRepository;
 use App\Domain\Contestant;
 use App\Domain\Judge;
 use App\Domain\Genre;
@@ -39,18 +39,26 @@ class ContestController extends Controller
         return $scores;
     }
 
-    private function scoreTheRound(string $genre)
-    {
-        return Score::computeRoundScore($genre);
-    }
-
     /**
      * Here, the winner is determined & published.
      * Winner & winning score both save in DB.
      */
     public function closeContest(): array
     {
-        $winner = Score::getWinner();
-        return $winner;
+        $winners = Score::getWinners();
+
+        $this->saveContest($winners);
+
+        return $winners;
+    }
+
+    private function scoreTheRound(string $genre): array
+    {
+        return Score::computeRoundScore($genre);
+    }
+
+    private function saveContest(array $winners)
+    {
+        ContestRepository::saveContest($winners);
     }
 }

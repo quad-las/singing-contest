@@ -8,7 +8,7 @@ use App\Domain\Judge;
 
 class Score
 {
-    public static function computeRoundScore(string $genre)
+    public static function computeRoundScore(string $genre): array
     {
         // round score range: 0.1 - 10.0
         $round_score = round((rand(1, 100) / 10), 1);
@@ -18,7 +18,7 @@ class Score
         return $contestants_scores;
     }
 
-    public static function getWinner(): array
+    public static function getWinners(): array
     {
         $contestants = Contestant::getContestants()->pluck('name');
         $overall_contestant_scores = [];
