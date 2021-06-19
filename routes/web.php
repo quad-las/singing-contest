@@ -14,3 +14,4 @@
 */
 
 $router->get('/', ['uses' => 'ContestController@create']);
+$router->get('/play/{round}', ['uses' => 'ContestController@play']);

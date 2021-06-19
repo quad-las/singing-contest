@@ -16,7 +16,6 @@ class ContestController extends Controller
     {
         Cache::flush();
         Genre::resetGenresForNewContest();
-        // TODO: contest
 
         $contestants = Contestant::registerContestants();
         $judges = Judge::registerJudgesForContest();
@@ -27,22 +26,31 @@ class ContestController extends Controller
         ];
     }
 
-    public function play(int $round): bool
+    public function play(int $round)
     {
-        // get next genre for this round
         $genre = Genre::getGenreForCurrentRound();
 
-        $this->saveRoundScore($genre);
-
+        $scores = $this->scoreTheRound($genre);
+        
         if ($round === 6) {
-            // close content
+            return $this->closeContest();
         }
 
-        return true;
+        return $scores;
     }
 
-    public function saveRoundScore(string $genre)
+    private function scoreTheRound(string $genre)
     {
-        $scores = Score::scoreTheRound($genre);
+        return Score::computeRoundScore($genre);
+    }
+
+    /**
+     * Here, the winner is determined & published.
+     * Winner & winning score both save in DB.
+     */
+    public function closeContest(): array
+    {
+        $winner = Score::getWinner();
+        return $winner;
     }
 }
