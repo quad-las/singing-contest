@@ -52,6 +52,11 @@ class ContestController extends Controller
         return $winners;
     }
 
+    public function leaderBoard(int $limit = 5): array
+    {
+        return ContestRepository::getLeaderBoard($limit);
+    }
+
     private function scoreTheRound(string $genre): array
     {
         return Score::computeRoundScore($genre);
