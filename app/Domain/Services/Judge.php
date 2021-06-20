@@ -13,7 +13,7 @@ class Judge
     const ROCK_JUDGE = 'rock';
     const HONEST_JUDGE = 'honest';
 
-    public static function registerJudgesForContest(): collection
+    public function registerJudgesForContest(): collection
     {
         $judges = collect([
             self::MEAN_JUDGE,
@@ -29,7 +29,7 @@ class Judge
         return $judges;
     }
 
-    public static function getTotalScoreFromJudges(int $rating, bool $isRockGenre, bool $contestant_is_sick): int
+    public function getTotalScoreFromJudges(int $rating, bool $isRockGenre, bool $contestant_is_sick): int
     {
         $judges = Cache::get('judges');
 
@@ -65,17 +65,17 @@ class Judge
         return array_sum($each_score);
     }
 
-    private static function scoreByMeanJudge(int $rating): int
+    private function scoreByMeanJudge(int $rating): int
     {
         return $rating > 90 ? 10 : 2;
     }
 
-    private static function scoreByRandomJudge(int $rating): int
+    private function scoreByRandomJudge(int $rating): int
     {
         return rand(0, 10);
     }
 
-    private static function scoreByFriendlyJudge(int $rating, bool $contestant_is_sick): int
+    private function scoreByFriendlyJudge(int $rating, bool $contestant_is_sick): int
     {
         $bonus_point = 1;
 
@@ -84,7 +84,7 @@ class Judge
         return $contestant_is_sick ? ($score + $bonus_point) : $score;
     }
 
-    private static function scoreByRockJudge(int $rating, bool $isRockGenre): int
+    private function scoreByRockJudge(int $rating, bool $isRockGenre): int
     {
         if (!$isRockGenre) {
             return rand(0, 10);
@@ -109,7 +109,7 @@ class Judge
         return $score;
     }
 
-    private static function scoreByHonestJudge(int $rating): int
+    private function scoreByHonestJudge(int $rating): int
     {
         return ceil($rating / 10);
     }

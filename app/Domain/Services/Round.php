@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Round
 {
-    public static function setRounds(int $number_of_rounds = 6): int
+    public function setRounds(int $number_of_rounds = 6): int
     {
         Cache::put('rounds', $number_of_rounds - 1);
         return $number_of_rounds;
@@ -15,7 +15,7 @@ class Round
     /**
      * @return int|bool
      */
-    public static function moreRoundsLeft()
+    public function moreRoundsLeft()
     {
         $rounds = Cache::get('rounds');
         if ($rounds <= 0) {
@@ -26,7 +26,7 @@ class Round
         return $rounds;
     }
 
-    public static function contestIsOngoing(): bool
+    public function contestIsOngoing(): bool
     {
         return Cache::get('rounds') ? true : false;
     }

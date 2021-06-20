@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
-use App\Repositories\ContestRepository;
+use App\Domain\Repositories\ContestRepository;
 use App\Domain\Services\Contestant;
 use App\Domain\Services\Judge;
 use App\Domain\Services\Genre;
@@ -15,20 +15,55 @@ use App\Domain\Services\Round;
 
 class ContestController extends Controller
 {
+
+    /** @var ContestRepository */
+    protected $contestantRepo;
+
+    /** @var Contestant */
+    protected $contestant;
+
+    /** @var Genre */
+    protected $genre;
+
+    /** @var Score */
+    protected $score;
+
+    /** @var Round */
+    protected $rounds;
+
+    /** @var  Judge*/
+    protected $judge;
+
+    public function __construct(
+        ?Genre $genre,
+        ?Judge $judge,
+        ?Score $score,
+        ?Round $round,
+        ?Contestant $contestant,
+        ?ContestRepository $contestantRepo,
+    ) {
+        $this->genre = $genre ?? new Genre;
+        $this->judge = $judge ?? new Judge;
+        $this->score = $score ?? new Score;
+        $this->round = $round ?? new Round;
+        $this->contestant = $contestant ?? new Contestant;
+        $this->contestantRepo = $contestantRepo ?? new ContestRepository;
+    }
+
     /**
      * @return RedirectResponse|View
      */
     public function start()
     {
-        if (Round::contestIsOngoing()) {
+        if ($this->round->contestIsOngoing()) {
             return redirect('/play');
         }
         
-        Genre::setGenresForNewContest();
+        $this->genre->setGenresForNewContest();
 
-        $rounds = Round::setRounds();
-        $contestants = Contestant::registerContestants();
-        $judges = Judge::registerJudgesForContest();
+        $rounds = $this->round->setRounds();
+        $contestants = $this->contestant->registerContestants();
+        $judges = $this->judge->registerJudgesForContest();
 
         return view('index', [
             'rounds' => $rounds,

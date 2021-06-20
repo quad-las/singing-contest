@@ -8,7 +8,19 @@ use App\Domain\Services\Judge;
 
 class Score
 {
-    public static function computeRoundScore(string $genre): array
+    /** @var Contestant */
+    protected $contestant;
+
+    /** @var  Judge*/
+    protected $judge;
+
+    public function __construct(?Judge $judge, ?Contestant $contestant)
+    {
+        $this->judge = $judge ?? new Judge;
+        $this->contestant = $contestant ?? new Contestant;
+    }
+
+    public function computeRoundScore(string $genre): array
     {
         // round score range: 0.1 - 10.0
         $round_score = round((rand(1, 100) / 10), 1);
@@ -18,7 +30,7 @@ class Score
         return $contestants_scores;
     }
 
-    public static function getWinners(): array
+    public function getWinners(): array
     {
         $contestants = Contestant::getContestants()->pluck('name');
         $overall_contestant_scores = [];
@@ -35,7 +47,7 @@ class Score
         );
     }
 
-    private static function computeAndSaveContestantScore(string $genre, int $round_score): array
+    private function computeAndSaveContestantScore(string $genre, int $round_score): array
     {
         $isRockGenre = ($genre === 'rock');
         $scores = [];

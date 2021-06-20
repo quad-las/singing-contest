@@ -1,12 +1,12 @@
 <?php
 
-namespace App\Repositories;
+namespace App\Domain\Repositories;
 
 use App\Models\Contest;
 
 class ContestRepository
 {
-    public static function saveContest(array $winners): void
+    public function saveContest(array $winners): void
     {
         foreach ($winners as $winner) {
             $contest = new Contest();
@@ -16,7 +16,7 @@ class ContestRepository
         }
     }
 
-    public static function getLeaderBoard(int $limit): array
+    public function getLeaderBoard(int $limit): array
     {
         $leaders = Contest::orderBy('id', 'desc')
             ->select('winner', 'winning_score')

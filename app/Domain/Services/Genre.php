@@ -15,7 +15,7 @@ class Genre
         'the blues',
     ];
 
-    public static function generateGenreStrength(): array
+    public function generateGenreStrength(): array
     {
         $genres = self::GENRES;
         $genre_strength = [];
@@ -27,7 +27,7 @@ class Genre
         return $genre_strength;
     }
 
-    public static function setGenresForNewContest(): void
+    public function setGenresForNewContest(): void
     {
         $genres = collect(self::GENRES);
 
@@ -37,7 +37,7 @@ class Genre
     /**
      * @throws \Throwable
      */
-    public static function getGenreForCurrentRound(): string
+    public function getGenreForCurrentRound(): string
     {
         $genres = Cache::get('genres');
         $genre = $genres->random();

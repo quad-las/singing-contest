@@ -9,7 +9,15 @@ use App\Domain\Services\Genre;
 
 class Contestant
 {
-    public static function registerContestants(int $number_of_contestants = 10): collection
+    /** @var Genre */
+    protected $genre;
+
+    public function __construct(?Genre $genre)
+    {
+        $this->genre = $genre ?? new Genre;
+    }
+
+    public function registerContestants(int $number_of_contestants = 10): collection
     {
         $max = $number_of_contestants;
         $contestants = new collection();
@@ -34,18 +42,18 @@ class Contestant
         return $contestants;
     }
 
-    public static function getContestants(): collection
+    public function getContestants(): collection
     {
         return Cache::get('contestants');
     }
 
-    public static function isContestantSick(int $chance = 5): bool
+    public function isContestantSick(int $chance = 5): bool
     {
         return rand(1, 100) <= $chance;
     }
 
-    private static function getGenreStrength(): array
+    private function getGenreStrength(): array
     {
-        return Genre::generateGenreStrength();
+        return $this->genre->generateGenreStrength();
     }
 }
