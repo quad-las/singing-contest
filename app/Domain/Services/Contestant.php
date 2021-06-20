@@ -41,7 +41,7 @@ class Contestant
 
     public static function isContestantSick(int $chance = 5): bool
     {
-        return rand(1, 100) <= $chance;   
+        return rand(1, 100) <= $chance;
     }
 
     private static function getGenreStrength(): array

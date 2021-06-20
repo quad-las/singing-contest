@@ -18,18 +18,18 @@ class ContestRepository
 
     public static function getLeaderBoard(int $limit): array
     {
-        $leaders = Contest::orderBy('winning_score', 'desc')
+        $leaders = Contest::orderBy('id', 'desc')
             ->select('winner', 'winning_score')
             ->limit($limit)
             ->get()
             ->toArray();
 
-        $max = $leaders[0]['winning_score'];
+        $max = Contest::max('winning_score');
 
-        $all_time_highs = array_filter(
-            $leaders,
-            fn($score) => $max == $score['winning_score']
-        );
+
+        $all_time_highs = Contest::select('winner', 'winning_score')
+            ->where('winning_score', $max)
+            ->get();
 
         return [
             'leaders' => $leaders,

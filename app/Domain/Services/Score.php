@@ -3,7 +3,8 @@
 namespace App\Domain\Services;
 
 use Illuminate\Support\Facades\Cache;
-use App\Domain\Services\{Contestant, Judge};
+use App\Domain\Services\Contestant;
+use App\Domain\Services\Judge;
 
 class Score
 {
@@ -30,7 +31,7 @@ class Score
 
         return array_filter(
             $overall_contestant_scores,
-            fn($score) => $highest_score == $score
+            fn ($score) => $highest_score == $score
         );
     }
 
@@ -53,7 +54,7 @@ class Score
             $contestant_score = Judge::getTotalScoreFromJudges(
                 $rating,
                 $isRockGenre,
-                $contestant_is_sick    
+                $contestant_is_sick
             );
 
             $name = $contestant['name'];

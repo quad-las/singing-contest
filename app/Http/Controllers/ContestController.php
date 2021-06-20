@@ -7,13 +7,11 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 use App\Repositories\ContestRepository;
-use App\Domain\Services\{
-    Contestant,
-    Judge,
-    Genre,
-    Score,
-    Round
-};
+use App\Domain\Services\Contestant;
+use App\Domain\Services\Judge;
+use App\Domain\Services\Genre;
+use App\Domain\Services\Score;
+use App\Domain\Services\Round;
 
 class ContestController extends Controller
 {
@@ -52,7 +50,7 @@ class ContestController extends Controller
         
         $scores = $this->scoreTheRound($genre);
         
-        $rounds = Round::moreRoundsLeft();        
+        $rounds = Round::moreRoundsLeft();
 
         if (!$rounds) {
             $data = ['winners' => $this->closeContest()];
@@ -68,7 +66,7 @@ class ContestController extends Controller
 
     /**
      * Here, the winner is determined & published.
-     * Winner & winning score both save in DB.
+     * Winner & winning score both save in the DB.
      */
     public function closeContest(): array
     {
@@ -80,9 +78,11 @@ class ContestController extends Controller
         return $winners;
     }
 
-    public function leaderBoard(int $limit = 5): array
+    public function leaderBoard(int $limit = 5): View
     {
-        return ContestRepository::getLeaderBoard($limit);
+        $data = ContestRepository::getLeaderBoard($limit);
+
+        return view('leader-board', $data);
     }
 
     private function scoreTheRound(string $genre): array
