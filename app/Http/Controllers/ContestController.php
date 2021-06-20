@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Support\Facades\Cache;
-use Illuminate\View\View;
+use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
+use Illuminate\View\View;
 use App\Repositories\ContestRepository;
 use App\Domain\Services\{
     Contestant,
@@ -16,12 +17,18 @@ use App\Domain\Services\{
 
 class ContestController extends Controller
 {
-    public function start(): View
+    /**
+     * @return RedirectResponse|View
+     */
+    public function start()
     {
-        Cache::flush();
-        Genre::resetGenresForNewContest();
+        if (Round::contestIsOngoing()) {
+            return redirect('/play');
+        }
+        
+        Genre::setGenresForNewContest();
 
-        $rounds = Round::resetRounds();
+        $rounds = Round::setRounds();
         $contestants = Contestant::registerContestants();
         $judges = Judge::registerJudgesForContest();
 
@@ -32,7 +39,7 @@ class ContestController extends Controller
         ]);
     }
 
-    public function play(): View
+    public function play()//: View
     {
         $genre = Genre::getGenreForCurrentRound();
         
@@ -41,6 +48,7 @@ class ContestController extends Controller
         $rounds = Round::moreRoundsLeft();        
 
         if (!$rounds) {
+            // return $this->closeContest();
             $data = ['winners' => $this->closeContest()];
         } else {
             $data = [
@@ -62,6 +70,7 @@ class ContestController extends Controller
 
         $this->saveContest($winners);
 
+        Cache::flush();
         return $winners;
     }
 

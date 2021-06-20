@@ -6,7 +6,7 @@ use Illuminate\Support\Facades\Cache;
 
 class Round
 {
-    public static function resetRounds(int $number_of_rounds = 6): int
+    public static function setRounds(int $number_of_rounds = 6): int
     {
         Cache::put('rounds', $number_of_rounds - 1);
         return $number_of_rounds;
@@ -24,5 +24,10 @@ class Round
 
         Cache::decrement('rounds');
         return $rounds;
+    }
+
+    public static function contestIsOngoing(): bool
+    {
+        return Cache::get('rounds') ? true : false;
     }
 }
