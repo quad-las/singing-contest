@@ -15,9 +15,8 @@ use App\Domain\Services\Round;
 
 class ContestController extends Controller
 {
-
     /** @var ContestRepository */
-    protected $contestantRepo;
+    protected $contestRepo;
 
     /** @var Contestant */
     protected $contestant;
@@ -40,14 +39,14 @@ class ContestController extends Controller
         ?Score $score,
         ?Round $round,
         ?Contestant $contestant,
-        ?ContestRepository $contestantRepo,
+        ?ContestRepository $contestRepo
     ) {
         $this->genre = $genre ?? new Genre;
         $this->judge = $judge ?? new Judge;
         $this->score = $score ?? new Score;
         $this->round = $round ?? new Round;
         $this->contestant = $contestant ?? new Contestant;
-        $this->contestantRepo = $contestantRepo ?? new ContestRepository;
+        $this->contestRepo = $contestRepo ?? new ContestRepository;
     }
 
     /**
@@ -78,14 +77,14 @@ class ContestController extends Controller
     public function play()
     {
         try {
-            $genre = Genre::getGenreForCurrentRound();
+            $genre = $this->genre->getGenreForCurrentRound();
         } catch (\Throwable $th) {
             return redirect('/');
         }
         
         $scores = $this->scoreTheRound($genre);
         
-        $rounds = Round::moreRoundsLeft();
+        $rounds = $this->round->moreRoundsLeft();
 
         if (!$rounds) {
             $data = ['winners' => $this->closeContest()];
@@ -105,7 +104,7 @@ class ContestController extends Controller
      */
     public function closeContest(): array
     {
-        $winners = Score::getWinners();
+        $winners = $this->score->getWinners();
 
         $this->saveContest($winners);
 
@@ -115,18 +114,18 @@ class ContestController extends Controller
 
     public function leaderBoard(int $limit = 5): View
     {
-        $data = ContestRepository::getLeaderBoard($limit);
+        $data = $this->contestRepo->getLeaderBoard($limit);
 
         return view('leader-board', $data);
     }
 
     private function scoreTheRound(string $genre): array
     {
-        return Score::computeRoundScore($genre);
+        return $this->score->computeRoundScore($genre);
     }
 
     private function saveContest(array $winners): void
     {
-        ContestRepository::saveContest($winners);
+        $this->contestRepo->saveContest($winners);
     }
 }

@@ -32,7 +32,7 @@ class Score
 
     public function getWinners(): array
     {
-        $contestants = Contestant::getContestants()->pluck('name');
+        $contestants = $this->contestant->getContestants()->pluck('name');
         $overall_contestant_scores = [];
 
         foreach ($contestants as $contestant) {
@@ -52,10 +52,10 @@ class Score
         $isRockGenre = ($genre === 'rock');
         $scores = [];
 
-        $contestants = Contestant::getContestants();
+        $contestants = $this->contestant->getContestants();
 
         foreach ($contestants as $contestant) {
-            $contestant_is_sick = Contestant::isContestantSick();
+            $contestant_is_sick = $this->contestant->isContestantSick();
 
             $rating = $round_score * $contestant['strength'][$genre];
             
@@ -63,7 +63,7 @@ class Score
                 $rating = $rating / 2;
             }
 
-            $contestant_score = Judge::getTotalScoreFromJudges(
+            $contestant_score = $this->judge->getTotalScoreFromJudges(
                 $rating,
                 $isRockGenre,
                 $contestant_is_sick
