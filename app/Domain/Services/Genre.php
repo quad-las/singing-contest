@@ -34,6 +34,9 @@ class Genre
         Cache::put('genres', $genres);
     }
 
+    /**
+     * @throws \Throwable
+     */
     public static function getGenreForCurrentRound(): string
     {
         $genres = Cache::get('genres');

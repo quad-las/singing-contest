@@ -39,16 +39,22 @@ class ContestController extends Controller
         ]);
     }
 
-    public function play()//: View
+    /**
+     * @return RedirectResponse|View
+     */
+    public function play()
     {
-        $genre = Genre::getGenreForCurrentRound();
+        try {
+            $genre = Genre::getGenreForCurrentRound();
+        } catch (\Throwable $th) {
+            return redirect('/');
+        }
         
         $scores = $this->scoreTheRound($genre);
         
         $rounds = Round::moreRoundsLeft();        
 
         if (!$rounds) {
-            // return $this->closeContest();
             $data = ['winners' => $this->closeContest()];
         } else {
             $data = [
