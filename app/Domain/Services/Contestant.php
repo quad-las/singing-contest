@@ -1,11 +1,11 @@
 <?php
 
-namespace App\Domain;
+namespace App\Domain\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
 use Faker\Factory as Faker;
-use App\Domain\Genre;
+use App\Domain\Services\Genre;
 
 class Contestant
 {

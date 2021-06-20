@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Domain;
+namespace App\Domain\Services;
 
 use Illuminate\Support\Facades\Cache;
-use App\Domain\{Contestant, Judge};
+use App\Domain\Services\{Contestant, Judge};
 
 class Score
 {

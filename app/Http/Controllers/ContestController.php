@@ -6,11 +6,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Repositories\ContestRepository;
-use App\Domain\{
+use App\Domain\Services\{
     Contestant,
     Judge,
     Genre,
-    Score
+    Score,
+    Round
 };
 
 class ContestController extends Controller
@@ -20,26 +21,35 @@ class ContestController extends Controller
         Cache::flush();
         Genre::resetGenresForNewContest();
 
+        $rounds = Round::resetRounds();
         $contestants = Contestant::registerContestants();
         $judges = Judge::registerJudgesForContest();
 
         return view('index', [
+            'rounds' => $rounds,
             'contestants' => $contestants,
             'judges' => $judges,
         ]);
     }
 
-    public function play(int $round): View
+    public function play(): View
     {
         $genre = Genre::getGenreForCurrentRound();
-
+        
         $scores = $this->scoreTheRound($genre);
         
-        if ($round === 6) {
-            return $this->closeContest();
+        $rounds = Round::moreRoundsLeft();        
+
+        if (!$rounds) {
+            $data = ['winners' => $this->closeContest()];
+        } else {
+            $data = [
+                'rounds' => $rounds,
+                'scores' => $scores,
+            ];
         }
 
-        return view('index', ['scores' => $scores]);
+        return view('index', $data);
     }
 
     /**

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Domain;
+namespace App\Domain\Services;
 
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;

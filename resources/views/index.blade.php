@@ -85,11 +85,41 @@
                         </table>
                     </div>
                 @endisset
+
+                {{-- show champion(s) :) --}}
+                @isset($winners)
+                    <div class="col-md-auto">
+                        <table class="table table-hover table-borderless">
+                            <tr class="table-success">
+                                <th colspan="3">
+                                    The Winner(s)!!!
+                                </th>
+                            </tr>
+                    
+                            @foreach ($winners as $winner => $score)
+                                <tr>
+                                    <td>{{ $winner }}</td>
+                                    <td>&nbsp;&nbsp;</td>
+                                    <td class="fw-bold">{{ $score }}</td>
+                                </tr>
+                            @endforeach
+                        </table>
+                    </div>
+                @endisset
             </div>
         </div>
 
         <div class="mx-auto text-center p-5">
-            <a class="btn btn-outline-success btn-lg" href="{{ URL('/start') }}" role="button">Begin Contest</a>
+            <a class="btn btn-outline-success btn-lg" href="{{ URL('/leader-board') }}" role="button">Leader Board</a>
+            <a class="btn btn-outline-success btn-lg" href="{{ URL('/start') }}" role="button">re/Start Contest</a>
+
+            @isset($rounds)
+                <a class="btn btn-outline-success btn-lg" href="{{ URL('/play') }}" role="button">
+                    Next Round
+                    <small class="badge bg-secondary">{{ $rounds }} more</small>
+                </a>
+            @endisset
+            
         </div>
     </body>
 </html>
