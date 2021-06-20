@@ -10,7 +10,7 @@ use App\Domain\Services\Genre;
 class Contestant
 {
     /** @var Genre */
-    protected $genre;
+    private $genre;
 
     public function __construct(?Genre $genre)
     {

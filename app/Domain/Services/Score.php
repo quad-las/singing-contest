@@ -9,10 +9,10 @@ use App\Domain\Services\Judge;
 class Score
 {
     /** @var Contestant */
-    protected $contestant;
+    private $contestant;
 
     /** @var  Judge*/
-    protected $judge;
+    private $judge;
 
     public function __construct(?Judge $judge, ?Contestant $contestant)
     {

@@ -2,6 +2,7 @@
 
 namespace App\Domain\Repositories;
 
+use Illuminate\Support\Facades\Cache;
 use App\Models\Contest;
 
 class ContestRepository
@@ -14,9 +15,11 @@ class ContestRepository
             $contest->winning_score = array_values($winner)[0];
             $contest->save();
         }
+
+        Cache::flush();
     }
 
-    public function getLeaderBoard(int $limit): array
+    public function getLeaderBoard(int $limit = 5): array
     {
         $leaders = Contest::orderBy('id', 'desc')
             ->select('winner', 'winning_score')

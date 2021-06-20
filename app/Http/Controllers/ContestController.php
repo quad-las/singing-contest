@@ -2,7 +2,6 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Cache;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\View\View;
@@ -16,22 +15,22 @@ use App\Domain\Services\Round;
 class ContestController extends Controller
 {
     /** @var ContestRepository */
-    protected $contestRepo;
+    private $contestRepo;
 
     /** @var Contestant */
-    protected $contestant;
+    private $contestant;
 
     /** @var Genre */
-    protected $genre;
+    private $genre;
 
     /** @var Score */
-    protected $score;
+    private $score;
 
     /** @var Round */
-    protected $rounds;
+    private $rounds;
 
     /** @var  Judge*/
-    protected $judge;
+    private $judge;
 
     public function __construct(
         ?Genre $genre,
@@ -98,23 +97,9 @@ class ContestController extends Controller
         return view('index', $data);
     }
 
-    /**
-     * Here, the winner is determined & published.
-     * Winner & winning score both save in the DB.
-     */
-    public function closeContest(): array
+    public function leaderBoard(): View
     {
-        $winners = $this->score->getWinners();
-
-        $this->saveContest($winners);
-
-        Cache::flush();
-        return $winners;
-    }
-
-    public function leaderBoard(int $limit = 5): View
-    {
-        $data = $this->contestRepo->getLeaderBoard($limit);
+        $data = $this->contestRepo->getLeaderBoard();
 
         return view('leader-board', $data);
     }
@@ -124,8 +109,16 @@ class ContestController extends Controller
         return $this->score->computeRoundScore($genre);
     }
 
-    private function saveContest(array $winners): void
+    /**
+     * Here, the winner is determined & published.
+     * Winner & winning score both save in the DB.
+     */
+    private function closeContest(): array
     {
+        $winners = $this->score->getWinners();
+
         $this->contestRepo->saveContest($winners);
+
+        return $winners;
     }
 }
