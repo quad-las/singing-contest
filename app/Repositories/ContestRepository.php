@@ -6,7 +6,7 @@ use App\Models\Contest;
 
 class ContestRepository
 {
-    public static function saveContest(array $winners)
+    public static function saveContest(array $winners): void
     {
         foreach ($winners as $winner) {
             $contest = new Contest();

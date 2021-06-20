@@ -27,7 +27,7 @@ class Genre
         return $genre_strength;
     }
 
-    public static function resetGenresForNewContest()
+    public static function resetGenresForNewContest(): void
     {
         $genres = collect(self::GENRES);
 

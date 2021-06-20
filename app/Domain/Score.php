@@ -3,8 +3,7 @@
 namespace App\Domain;
 
 use Illuminate\Support\Facades\Cache;
-use App\Domain\Contestant;
-use App\Domain\Judge;
+use App\Domain\{Contestant, Judge};
 
 class Score
 {

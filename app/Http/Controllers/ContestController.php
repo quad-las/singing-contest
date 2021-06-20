@@ -6,10 +6,12 @@ use Illuminate\Support\Facades\Cache;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use App\Repositories\ContestRepository;
-use App\Domain\Contestant;
-use App\Domain\Judge;
-use App\Domain\Genre;
-use App\Domain\Score;
+use App\Domain\{
+    Contestant,
+    Judge,
+    Genre,
+    Score
+};
 
 class ContestController extends Controller
 {
@@ -63,7 +65,7 @@ class ContestController extends Controller
         return Score::computeRoundScore($genre);
     }
 
-    private function saveContest(array $winners)
+    private function saveContest(array $winners): void
     {
         ContestRepository::saveContest($winners);
     }

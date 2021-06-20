@@ -56,7 +56,7 @@
                     </div>
                 @endisset
 
-                 {{-- show contestants' score for the round --}}
+                {{-- show contestants' score for the round --}}
                 @isset($scores)
                     <div class="col-md-auto">
                         <table class="table table-hover table-borderless">
