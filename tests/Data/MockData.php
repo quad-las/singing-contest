@@ -2,6 +2,7 @@
 
 class MockData
 {
+    const TABLE = 'test-contests';
     const VIEW = 'Illuminate\View\View';
     const REDIRECT = 'Illuminate\Http\RedirectResponse';
     const GENRE = 'pop';

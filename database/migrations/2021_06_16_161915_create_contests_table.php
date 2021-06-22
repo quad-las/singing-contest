@@ -13,6 +13,16 @@ class CreateContestsTable extends Migration
      */
     public function up()
     {
+        if (config('app.env') === 'testing') {
+            Schema::create('test-contests', function (Blueprint $table) {
+                $table->id();
+                $table->string('winner')->nullable();
+                $table->integer('winning_score')->nullable();
+                $table->timestamps();
+            });
+            return;
+        }
+        
         Schema::create('contests', function (Blueprint $table) {
             $table->id();
             $table->string('winner')->nullable();
@@ -28,6 +38,11 @@ class CreateContestsTable extends Migration
      */
     public function down()
     {
+        if (config('app.env') === 'testing') {
+            Schema::dropIfExists('test-contests');
+            return;
+        }
+
         Schema::dropIfExists('contests');
     }
 }

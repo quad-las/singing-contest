@@ -1,6 +1,5 @@
 <?php
 
-use Laravel\Lumen\Testing\DatabaseMigrations;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Collection;
 use App\Http\Controllers\ContestController;

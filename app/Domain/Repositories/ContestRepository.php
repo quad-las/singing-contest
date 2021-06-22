@@ -7,13 +7,23 @@ use App\Models\Contest;
 
 class ContestRepository
 {
+    /** @var Contest */
+    private $contest;
+
+    public function __construct(?Contest $contest, string $table = null)
+    {
+        $this->contest = $contest ?? new Contest();
+        if ($table) {
+            $this->contest = $this->contest->setTable($table);
+        }
+    }
+
     public function saveContest(array $winners): void
     {
         foreach ($winners as $winner) {
-            $contest = new Contest();
-            $contest->winner = array_keys($winner)[0];
-            $contest->winning_score = array_values($winner)[0];
-            $contest->save();
+            $this->contest->winner = array_keys($winner)[0];
+            $this->contest->winning_score = array_values($winner)[0];
+            $this->contest->save();
         }
 
         Cache::flush();
@@ -21,16 +31,15 @@ class ContestRepository
 
     public function getLeaderBoard(int $limit = 5): array
     {
-        $leaders = Contest::orderBy('id', 'desc')
+        $leaders = $this->contest->orderBy('id', 'desc')
             ->select('winner', 'winning_score')
             ->limit($limit)
             ->get()
             ->toArray();
 
-        $max = Contest::max('winning_score');
+        $max = $this->contest->max('winning_score');
 
-
-        $all_time_highs = Contest::select('winner', 'winning_score')
+        $all_time_highs = $this->contest->select('winner', 'winning_score')
             ->where('winning_score', $max)
             ->get();
 
