@@ -7,6 +7,7 @@ class MockData
     const REDIRECT = 'Illuminate\Http\RedirectResponse';
     const GENRE = 'pop';
 
+    const NUMBER_OF_CONTESTANTS = 2;
     const NUMBER_OF_ROUNDS = 6;
     const ROUNDS_LEFT = 3;
 
@@ -20,6 +21,8 @@ class MockData
             'strength' => ['rock' => 1, 'country' => 4, 'pop' => 6, 'disco' => 2, 'jazz' => 2, 'the blues' => 2],
         ]
     ];
+
+    const GENRE_STRENGTH = ['rock' => 3, 'country' => 6, 'pop' => 9, 'disco' => 4, 'jazz' => 10, 'the blues' => 2];
 
     const JUDGES = ['mean', 'friendly', 'honest'];
 

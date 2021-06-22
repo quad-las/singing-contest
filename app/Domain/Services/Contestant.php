@@ -29,7 +29,7 @@ class Contestant
 
             $contestants[] = [
                 'name' => $name,
-                'strength' => self::getGenreStrength(),
+                'strength' => $this->getGenreStrength(),
             ];
 
             // also, cache individual contestant and initialize score to 0
