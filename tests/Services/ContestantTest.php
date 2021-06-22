@@ -14,7 +14,6 @@ class ContestantTest extends TestCase
     /** @var Genre */
     private $genre;
 
-
     public function setUp(): void
     {
         parent::setUp();
