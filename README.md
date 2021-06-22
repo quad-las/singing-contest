@@ -11,6 +11,6 @@ create database and add corresponding values in .env -> DB_*
 
 run migration: `php artisan migrate`
 
-start the local server: `php artisan serve` and visit localhost:8000 in your browser
+start the local server: `php artisan serve` and visit `localhost:8000` in your browser
 
 to run tests, run command `./vendor/bin/phpunit`
