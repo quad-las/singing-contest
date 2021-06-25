@@ -117,6 +117,7 @@ class ContestController extends Controller
     {
         $winners = $this->score->getWinners();
 
+        // save contest & flush cache
         $this->contestRepo->saveContest($winners);
 
         return $winners;
